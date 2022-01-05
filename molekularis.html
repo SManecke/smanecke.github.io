@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html style="width: 100%; height: 100%" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.png" />
+    <title>Molekularis</title>
+</head>
+<body style="width: 100%; height: 100%; margin: 0pt">
+<canvas id="canvas" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></canvas>
+<script>
+
+var width, height;
+var canvas = document.getElementById("canvas");
+var ctx, update;
+
+function update(w, h, mouse_x, mouse_y, button) {
+    ctx.fillStyle = 'rgb(180, 180, 180)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = 'rgb(0, 0, 0)';
+    ctx.fillText('Hello world: '+mouse_x + ", "+mouse_y + ", " + button, 10, 50);
+}
+
+function resize() {
+    width = document.body.clientWidth;
+    canvas.width = width;
+    height = document.body.clientHeight;
+    canvas.height = height;
+    update(width, height, 0, 0, -1);
+}
+
+function click(event) {
+    event.preventDefault();
+    update(width, height, event.clientX, event.clientY, event.button);
+    return false;
+}
+
+function clear(r, g, b) {
+    ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")"
+    ctx.fillRect(0, 0, width, height);
+}
+
+function draw_line(x0, y0, x1, y1, thickness) {
+    ctx.lineWidth = thickness;
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();    
+}
+
+
+function draw_dot(x, y) {
+    ctx.beginPath();
+    ctx.arc(x, y, 0.8, 0, 2*Math.PI);
+    ctx.fill();    
+}
+
+
+function draw_char(x, y, c) {
+    ctx.font = '18px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgb(0, 0, 0)';
+    ctx.fillText(String.fromCharCode(c), x, y);
+}
+
+function ignore(event) {
+    event.preventDefault();
+    return false;
+}
+
+async function init() {
+    const { instance } = await WebAssembly.instantiateStreaming(
+        fetch("./molekularis.wasm"),
+        { env: { clear, draw_line, draw_char, draw_dot } }
+    );
+    instance.exports.init();
+
+    update = instance.exports.update;
+
+    if (canvas.getContext) {
+        ctx = canvas.getContext('2d');
+        resize();
+        canvas.addEventListener("click", click);
+        canvas.addEventListener("contextmenu", ignore);
+        canvas.addEventListener("auxclick", click);
+        window.addEventListener("resize", resize);
+}
+
+}
+init();
+</script>
+
+
+
+
+
+
+</body>
