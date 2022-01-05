@@ -14,13 +14,6 @@ var width, height;
 var canvas = document.getElementById("canvas");
 var ctx, update;
 
-function update(w, h, mouse_x, mouse_y, button) {
-    ctx.fillStyle = 'rgb(180, 180, 180)';
-    ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = 'rgb(0, 0, 0)';
-    ctx.fillText('Hello world: '+mouse_x + ", "+mouse_y + ", " + button, 10, 50);
-}
-
 function resize() {
     width = document.body.clientWidth;
     canvas.width = width;
@@ -59,9 +52,9 @@ function draw_dot(x, y) {
 function draw_char(x, y, c) {
     ctx.font = '18px serif';
     ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textBaseline = 'top';
     ctx.fillStyle = 'rgb(0, 0, 0)';
-    ctx.fillText(String.fromCharCode(c), x, y);
+    ctx.fillText(String.fromCharCode(c), x, y - 7);
 }
 
 function ignore(event) {
@@ -74,7 +67,46 @@ async function init() {
         fetch("./molekularis.wasm"),
         { env: { clear, draw_line, draw_char, draw_dot } }
     );
-    instance.exports.init();
+
+    puzzle_text = `              O-N              
+             /   \\             
+          O-N     N-N          
+         /   \\   /   \\         
+      N-C     C-C     C-N      
+     /   \\   /   \\   /   \\     
+  N-N     O-O     O-N     O-N  
+ /   \\   /   \\   /   \\   /   \\ 
+O     N-N     C-O     O-O     N
+ \\   /   \\   /   \\   /   \\   / 
+  O-O     O-C     N-O     O-O  
+ /   \\   /   \\   /   \\   /   \\ 
+O     O-O     O-N     O-C     O
+ \\   /   \\   /   \\   /   \\   / 
+  N-O     O-O     O-N     N-O  
+ /   \\   /   \\   /   \\   /   \\ 
+O     N-N     N-O     N-O     N
+ \\   /   \\   /   \\   /   \\   / 
+  O-O     O-C     N-N     O-N  
+ /   \\   /   \\   /   \\   /   \\ 
+O     O-N     O-N     O-O     N
+ \\   /   \\   /   \\   /   \\   / 
+  N-N     N-O     C-O     N-O  
+     \\   /   \\   /   \\   /     
+      C-C     N-N     N-O      
+         \\   /   \\   /         
+          O-O     N-N          
+             \\   /             
+              O-O              
+`;
+    
+    const array = new Uint8Array(
+      instance.exports.memory.buffer,
+      instance.exports.puzzle_text,
+      puzzle_text.length
+    );
+    const textEncoder = new TextEncoder();
+    array.set(textEncoder.encode(puzzle_text));
+    instance.exports.init(array.length);
 
     update = instance.exports.update;
 
@@ -85,7 +117,13 @@ async function init() {
         canvas.addEventListener("contextmenu", ignore);
         canvas.addEventListener("auxclick", click);
         window.addEventListener("resize", resize);
-}
+        document.onkeydown = function(event) {
+            if(event.key == "y" || event.key == "z") {
+                instance.exports.undo();
+                update(width, height, 0, 0, -1);
+            }
+        };
+    }
 
 }
 init();
