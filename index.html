@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="style.css" rel="stylesheet" type="text/css" media="all"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/favicon.png" />
+    <title>Home</title>
+</head>
+<body>
+    <div class="main">
+
+        <ul class="nav">
+            <li class="nav"> <a href="index.html" class="active">Home</a></li>
+            <li class="nav"> <a href="math.html">Math</a></li>
+            <li class="nav"> <a href="projects.html">Projects</a></li>
+        </ul>
+        <code class="banner">
+             <em class="keyword">int</em> hyperplanesCount = arrangement->hyperplanesCount;<br />
+             <em class="keyword">int</em> fixVerticesCount = arrangement->fixVerticesCount;<br />
+             <em class="keyword">int</em> newVerticesCount = arrangement->newVerticesCount;<br />
+             <em class="keyword">int</em> n = algebra->n;<br />
+             QQ* fixVertices = arrangement->fixVertices;<br />
+             QQ* newVertices = arrangement->newVertices;<br />
+             QQ (*hyperplanes)[hyperplanesCount][3][n] = (QQ(*)[hyperplanesCount][3][n])arrangement->hyperplanes;<br />
+        </code>
+        
+
+        <div class="content">
+
+
+        </div>
+
+
+        <code class="banner">
+<em class="keyword">Path</em> working_dir;<br/>
+path_init_working_directory(&working_dir);<br/>
+<em class="keyword">FreeList</em> free_list;<br/>
+<em class="keyword">Arena</em> free_list_arena = arena_subarena(&arena, MB(512));<br/>
+free_list_init(&free_list, free_list_arena, 4096);<br/>
+<em class="keyword">Arena</em> error_list_arena = arena_subarena(&arena, MB(10));
+        </code>
+    </div>    
+</body>
+</html>
+
+

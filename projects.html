@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="style.css" rel="stylesheet" type="text/css" media="all"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/favicon.png" />
+    <title>Projects</title>
+</head>
+<body>
+    <div class="main">
+
+        <ul class="nav">
+            <li class="nav"> <a href="index.html">Home</a></li>
+            <li class="nav"> <a href="math.html">Math</a></li>
+            <li class="nav"> <a href="projects.html" class="active">Projects</a></li>
+        </ul>
+
+        <code class="banner">
+             <em class="keyword">int</em> hyperplanesCount = arrangement->hyperplanesCount;<br />
+             <em class="keyword">int</em> fixVerticesCount = arrangement->fixVerticesCount;<br />
+             <em class="keyword">int</em> newVerticesCount = arrangement->newVerticesCount;<br />
+             <em class="keyword">int</em> n = algebra->n;<br />
+             QQ* fixVertices = arrangement->fixVertices;<br />
+             QQ* newVertices = arrangement->newVertices;<br />
+             QQ (*hyperplanes)[hyperplanesCount][3][n] = (QQ(*)[hyperplanesCount][3][n])arrangement->hyperplanes;<br />
+        </code>
+
+        <div class="content">
+        <h1>Game related</h1>
+        <h2>Pufferlink</h2>
+        <p><a href="404.html">Github</a></p>
+        <div class="desclist">
+        <img src="images/pufferlink.png" class="descpreview"></img>
+        <div>
+            An unfinished game about
+            <a href="https://en.wikipedia.org/wiki/Homology_(mathematics)">homology</a>.
+            The rules are in principle analogous to 
+            <a href="https://en.wikipedia.org/wiki/slitherlink">slitherlink</a>
+            but in three dimensions. Right now, multiple geometries are supported
+            (cubical tilings, permutahedra tilings, and even a 120-cell), generated 
+            9using a very crude convex hull algorithm.
+            Topological features such as holes can be detected, but they do not
+            have impact on the game play yet. 
+
+            Custom renderer in OpenGL, has a platform layer abstracted from 
+            <a href="https://www.libsdl.org">SDL2</a> 
+            and uses <a href="https://github.com/wolfpld/tracy">Tracy</a> for profiling.
+            Written in C.
+        </div>
+        </div>
+
+        <h2>Mockup - A level editor for Super Mario World©</h2>
+        <p><a href="404.html">Github</a></p>
+        <div class="desclist">
+        <img src="images/mockup.png" class="descpreview"></img>
+        <div>
+            A level editor for Super Mario World, which is currently abandoned.
+            It features a working emulator for (a part of) the SNES (adapted 
+            from <a href="https://bsnes.dev/">bsnes</a>), 
+            which it uses to display game specific objects without reverse
+            engineering how they are supposed to interact. To make the editing
+            part possible, it also features an assembler for the wdc65816 (the chip
+            of the SNES), which is fast enough to reassemble the whole ROM in under 16ms 
+            to ensure rendering at 60fps.
+            Written in C.
+        </div>
+        </div>
+
+
+
+        <h2>Falcon</h2>
+        <p><a href="404.html">Github</a></p>
+
+        <div class="desclist">
+        <img src="images/falcon.png" class="descpreview-pixel"></img>
+        <div>
+            A small game inspired by 
+            <a href="https://en.wikipedia.org/wiki/Galcon">Galcon</a>. 
+            It supports local multiplayer using UNIX sockets, although the multiplayer part is very hacky.
+            Made with <a href="https://raylib.com">raylib</a>. 
+            Pixelart from <a href="https://opengameart.org/content/pixel-planets">here</a>.
+            While playable, it should be considered as a demo.
+            Written in C.
+        </div>
+        </div>
+        
+        <h2>Planets</h2>
+        <p><a href="404.html">Github</a></p>
+
+        <div class="desclist">
+        <img src="images/planets.png" class="descpreview"></img>
+        <div>
+            A demo inspired by this <a href="https://avinayak.github.io/art/2021/01/09/noise-planets.html">blog post</a>. 
+            It creates a small solar system using a method similar to the one
+            outlined in the blog post but adapted to a sphere (in 3d space).
+            Thus, the path tracing is done on the sphere instead of the circle and is then mapped onto
+            a texture without introducing discontinuities when projecting back.
+            Made with <a href="https://raylib.com">raylib</a>
+            Written in C.
+        </div>
+        </div>
+
+        <h2>Wolves and sheeps</h2>
+        <p><a href="404.html">Github</a></p>
+
+        <div class="desclist">
+        <div class="descpreview-code">
+        <code class="descpreview">
+            &nbsp;_ <em class="keyword">W</em> <em class="keyword">W</em> _<br />
+            _ _ _ _<br />
+            &nbsp;_ _ _ _<br />
+            _ _ _ _<br />
+            &nbsp;_ _ _ _<br />
+            _ _ _ _<br />
+            &nbsp;_ S S _<br />
+            S S S S
+        </code>
+        </div>
+        <div>
+            A classical game for two on a chess board, see 
+            <a href="https://en.wikipedia.org/wiki/Fox_games">wikipedia</a>, 
+            but with the twist that there are more wolves and more sheeps. This
+            program solves these types of games. Two wolves and six sheep is a win
+            for the wolves with perfect play, while seven sheep can contain the
+            two wolves. To make the search quicker, the boards are represented 
+            using two 32-bit integers and moves are generated using bithacks.
+            Uses the hashmap in <a href="https://github.com/nothings/stb">stb-lib</a>.
+            Written in C.
+        </div>
+        </div>
+
+        <h1>Algorithms</h1>
+        <h2>Linear programming</h2>
+        <p><a href="404.html">Github</a></p>
+
+        <div class="desclist">
+        <div class="descpreview-code">
+        <code class="descpreview" style="font-size:10px">
+-2.000 3.000 4.000 0.000 0.000 |<br />
+-------------------------------+-------<br />
+&nbsp;3.000 2.000 1.000 1.000 0.000 | 10.000<br />
+&nbsp;2.000 5.000 3.000 0.000 1.000 | 15.000
+        </code>
+        </div>
+        <div>
+            <a href="https://en.wikipedia.org/wiki/Linear_programming">Linear programming</a>
+             solver based on this 
+            <a href="https://pvk.ca/Blog/2013/12/19/so-you-want-to-write-an-lp-solver/">blog post</a>.
+            As in the blog post, an interior point method is used and
+            it turned out to be a lot simpler than my previous attempts
+            with the simplex method.
+            Uses <a href="https://github.com/DrTimothyAldenDavis/SuiteSparse/tree/master/CSparse">CSparse</a> for sparse matrix operations.
+            Written in C.
+        </div>
+        </div>
+
+        <h2>Shift reduce parsing with 'Baba is you'</h2>        
+        <p><a href="404.html">Github</a></p>
+
+        <div class="desclist">
+        <div class="descpreview-code">
+        <code class="descpreview">
+ object_part is w<br />
+ object_part is w i<br />
+ object_part is w i n<br />
+ object_part is win<br />
+ object_part is adjective<br />
+ object_part verb_adjective<br />
+ object_part verb_part<br />
+ sentence<br />
+ start
+        </code>
+        </div>
+        <div>
+            A shift-reduce parser written from scratch. The grammer I included is
+            derived from the game <a href="https://www.hempuli.com/baba/">Baba is you</a>
+            showing a (perhaps superior?) way to implement the core mechanic.
+            Written in C.
+        </div>
+        </div>
+
+        <h1>Puzzle related</h1>
+        <h2>Molecularis</h2>
+        <p><a href="404.html">Github</a></p>
+
+        <div class="desclist">
+        <img src="images/molecularis.png" class="descpreview"></img>
+        <div>
+            A friend of mine created a new type of <a href="http://molekularis.free.fr/">puzzle</a>. 
+            I wrote a solver and generator for these. A very large instance can be found
+            <a href="molecularis_gigantic.pdf">here</a>. The problem is reformulated as an
+            <a href="https://en.wikipedia.org/wiki/Satisfiability_modulo_theories">SMT-problem</a>
+            (the "theory" being the connectedness of atoms) and then solved with 
+            <a href="http://fmv.jku.at/picosat/">PicoSAT</a>. 
+            Moreover, I wrote a GUI for human solving at the computer allowing the user to conveniently 
+            undo mistakes. 
+            Written in C.
+        </div>
+        </div>
+        <h2>Slitherlink</h2>
+        <p><a href="404.html">Github</a></p>
+
+        <div class="desclist">
+        <img src="images/slitherlink.png" class="descpreview"></img>
+        <div>
+        A  <a href="https://en.wikipedia.org/wiki/slitherlink">slitherlink</a>
+        program. It takes the riddles from
+        <a href="https://www.janko.at/Raetsel/Slitherlink/index.htm">janko.at</a>
+        as input. It has two advantages over the puzzle applet provided there.
+        First, it also/only works offline. Second, the input handling is a bit more convenient.
+        The left mouse button toggles between filled and unknown, while the right mouse 
+        button toggles between empty and unknown, which is in the authors opinion easier
+        than the stateful approach at janko.at. Moreover, it automatically fills
+        whole regions when this is implied by the edges, which is a real time saver.
+        Written in C.
+        </div>
+        </div>
+
+
+        <h1>Other</h1>
+        <h2>This website</h2>
+        <p><a href="index.html">Link</a></p>
+
+        <div class="desclist">
+        <img src="images/website.png" class="descpreview"></img>
+        <div>
+            Written by hand from scratch in HTML and CSS. Except for <a href="https://www.mathjax.org/">MathJax</a>, no javascript is used.
+        </div>
+        </div>
+
+        </div>
+
+
+        <code class="banner">
+<em class="keyword">Path</em> working_dir;<br/>
+path_init_working_directory(&working_dir);<br/>
+<em class="keyword">FreeList</em> free_list;<br/>
+<em class="keyword">Arena</em> free_list_arena = arena_subarena(&arena, MB(512));<br/>
+free_list_init(&free_list, free_list_arena, 4096);<br/>
+<em class="keyword">Arena</em> error_list_arena = arena_subarena(&arena, MB(10));
+        </code>
+
+    </div>
+</body>
+</html>
+
+

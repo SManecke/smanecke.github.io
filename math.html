@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="style.css" rel="stylesheet" type="text/css" media="all"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/favicon.png" />
+    <script>
+        MathJax = {
+            tex: {inlineMath: [['$', '$']]}
+        };
+    </script>
+    <script src="mathjax/tex-mml-chtml.js" id="MathJax-script" async></script>
+    <title>Math</title>
+</head>
+<body>
+    <div class="main">
+
+        <ul class="nav">
+            <li class="nav"> <a href="index.html">Home</a></li>
+            <li class="nav"> <a href="math.html" class="active">Math</a></li>
+            <li class="nav"> <a href="projects.html">Projects</a></li>
+        </ul>
+   
+
+        <code class="banner">
+            <em class="keyword">\newcounter</em>{sidelabelcounter}<br /> 
+            <em class="keyword">\DeclareUrlCommand\sidelabel</em>{\urlstyle{sf}}<br />
+            <em class="keyword">\providecommand*\showkeyslabelformat</em>[1]{
+            <em class="keyword">\raisebox</em>{1.6ex}{<br />
+            <em class="keyword">\ifnum\value</em>{sidelabelcounter}=3
+            <em class="keyword">\setcounter</em>{sidelabelcounter}{0}
+            <em class="keyword">\fi<br />\phantom</em>{<em class="keyword">\Roman</em>
+            {sidelabelcounter}}<em class="keyword">\begin</em>{minipage}[t][5cm][b]{0cm}<em class="keyword">\rotatebox</em>{90}{<br />
+            <em class="keyword">\tiny\textnormal</em>{<em class="keyword">\sidelabel</em>{#1}}}<em class="keyword">\vfill</em>~<em class="keyword">\end</em>{minipage}}<em class="keyword">\phantom</em>{<em class="keyword">\Roman</em>{sidelabelcounter}}<em class="keyword">\stepcounter</em>{sidelabelcounter}}<br />
+        </code>
+
+        <div class="content">
+
+
+        <h1>Angles on cones</h1>
+        <h2>Generalized angle vectors, geometric lattices, and flag-angles</h2>
+        <p>With Spencer Backman and Raman Sanyal. <a href="https://arxiv.org/abs/1809.00956">arXiv</a></p>
+
+        <div class="desclist">
+        <img src="images/coneangles1.svg" class="descpreview"></img>
+        <div>
+            <b>Abstract:</b>
+            Interior and exterior angle vectors of polytopes capture curvature
+            information at faces of all dimensions and can be seen as metric
+            variants of $f$-vectors. In this context, Gram's relation takes the
+            place of the Euler-Poincaré relation as the unique linear relation
+            among interior angles. We show the existence and uniqueness of
+            Euler-Poincaré-type relations for generalized angle vectors by
+            building a bridge to the algebraic combinatorics of geometric
+            lattices, generalizing work of Klivans-Swartz. We introduce
+            flag-angles of polytopes as a geometric counterpart to
+            flag-$f$-vectors. Flag-angles generalize the angle deficiencies of
+            Descartes-Shephard, Grassmann angles, and spherical intrinsic volumes.
+            Using the machinery of incidence algebras, we relate flag-angles of
+            zonotopes to flag-$f$-vectors of graded posets. This allows us to
+            determine the linear relations satisfied by interior/exterior
+            flag-angle vectors.
+        </div>
+        </div>
+        
+        <h2>Angle sums of simplicial polytopes</h2>
+        <p><a href="https://arxiv.org/abs/2007.07050">arXiv</a></p>
+
+        <div class="desclist">
+        <img src="images/coneangles2.svg" class="descpreview"></img>
+        <div>
+            <b>Abstract:</b>
+            The interior angle vector ($\widehat{\alpha}$-vector) of a polytope is
+            a metric analogue of the $f$-vector in which faces are weighted by
+            their solid angle. For simplicial polytopes, Dehn-Sommerville-type
+            relations on the $\widehat{\alpha}$-vector were introduced by
+            Sommerville (1927) and Höhn (1953). Camenga (2006) defined the
+            $\widehat{\gamma}$-vector, a linear transformation analogous to the
+            $h$-vector and conjectured it to be non-negative. Using tools from
+            geometric and algebraic combinatorics, we prove this conjecture and
+            show that the $\widehat{\gamma}$-vector increases in the first half
+            and is flawless. In contrast to the $h$-vector, we construct a
+            six-dimensional polytope with non-unimodal $\widehat{\alpha}$-vector.
+            More generally, all result remain valid when solid angles are replaced
+            by simple and non-negative cone valuations.
+        </div>
+        </div>
+
+        <h2>Fan Valuations and spherical intrinsic volumes</h2>
+        <p>With Spencer Backman and Raman Sanyal. <a href="https://arxiv.org/abs/2106.06407">arXiv</a></p>
+
+        <div class="desclist">
+        <img src="images/coneangles3.svg" class="descpreview"></img>
+        <div>
+            <b>Abstract:</b>
+            We generalize valuations on polyhedral cones to valuations on fans.
+            For fans induced by hyperplane arrangements, we show a correspondence
+            between rotation-invariant valuations and deletion-restriction
+            invariants. In particular, we define a characteristic polynomial for
+            fans in terms of spherical intrinsic volumes and show that it
+            coincides with the usual characteristic polynomial in the case of
+            hyperplane arrangements. This gives a simple deletion-restriction
+            proof of a result of Klivans-Swartz. The metric projection of a cone
+            is a piecewise-linear map, whose underlying fan prompts a
+            generalization of spherical intrinsic volumes to indicator functions.
+            We show that these 'intrinsic indicators' yield valuations that
+            separate polyhedral cones. Applied to hyperplane arrangements, this
+            generalizes a result of Kabluchko on projection volumes.
+        </div>
+        </div>
+
+        <h1>Inscribed polytopes</h1>
+
+        <h2>Inscribable fans I: Inscribed cones, virtual polytopes, and routed particle trajectories</h2>
+        <p>With Raman Sanyal. <a href="https://arxiv.org/abs/2012.07724">arXiv</a></p>
+
+        <div class="desclist">
+        <img src="images/inscribed_fans1.svg" class="descpreview"></img>
+        <div>
+            <b>Abstract:</b> 
+            We investigate polytopes inscribed into a sphere that are normally
+            equivalent to a given polytope $P$. We show that the associated space
+            of polytopes, called the inscribed cone of $P$, is closed under
+            Minkowski addition. Inscribed cones are interpreted as type cones of
+            ideal hyperbolic polytopes and as deformation spaces of Delaunay
+            subdivisions. In particular, testing if there is an inscribed polytope
+            normally equivalent to $P$ is polynomial time solvable. Normal
+            equivalence is decided on the level of normal fans and we study the
+            structure of inscribed cones for various classes of polytopes and
+            fans, including simple, simplicial, and even. We classify (virtually)
+            inscribable fans in dimension $2$ as well as inscribable permutahedra
+            and nestohedra. A second goal of the paper is to introduce inscribed
+            virtual polytopes. Polytopes with a fixed normal fan $\mathcal{N}$
+            form a monoid with respect to Minkowski addition and the associated
+            Grothendieck group is called the type space of $\mathcal{N}$. Elements
+            of the type space correspond to formal Minkowski differences and are
+            naturally equipped with vertices and hence with a notion of
+            inscribability. We show that inscribed virtual polytopes form a
+            subgroup, which can be nontrivial even if $\mathcal{N}$ does not have
+            actual inscribed polytopes. We relate inscribed virtual polytopes to
+            routed particle trajectories, that is, piecewise linear trajectories
+            of particles in a ball with restricted directions. The state spaces
+            gives rise to connected groupoids generated by reflections, called
+            reflection groupoids. The endomorphism groups of reflection groupoids
+            can be thought of as discrete holonomy groups of the trajectories and
+            we determine when they are reflection groups.
+        </div>
+        </div>
+
+        <h2>Inscribable Fans II: Inscribed zonotopes, simplicial arrangements, and reflection groups</h2>        
+        <p>With Raman Sanyal.</p>
+        <div class="desclist">
+        <img src="images/inscribed_fans2.svg" class="descpreview"></img>
+        <div>
+            <b>TBD</b> 
+        </div>
+        </div>
+
+
+        <h1>Further papers</h1>
+        <h2>Coprime Ehrhart theory and counting free segments</h2>        
+        <p>With Raman Sanyal. <a href="https://arxiv.org/abs/2008.07895">arXiv</a></p>
+        <div class="desclist">
+        <img src="images/coprime.svg" class="descpreview"></img>
+        <div>
+            <b>Abstract:</b> 
+            A lattice polytope is "free" (or "empty") if its vertices are the only
+            lattice points it contains. In the context of valuation theory, Klain
+            (1999) proposed to study the functions $\alpha_i(P;n)$ that count the
+            number of free polytopes in $nP$ with $i$ vertices. For $i=1$, this is
+            the famous Ehrhart polynomial. For $i>3$, the computation is likely
+            impossible and for $i=2,3$ computationally challenging. In this paper,
+            we develop a theory of coprime Ehrhart functions, that count lattice
+            points with relatively prime coordinates, and use it to compute
+            $\alpha_2(P;n)$ for unimodular simplices. We show that the coprime
+            Ehrhart function can be explicitly determined from the Ehrhart
+            polynomial and we give some applications to combinatorial counting.
+        </div>
+        </div>
+
+        <h2>S-hypersimplices, pulling triangulations, and monotone paths</h2>        
+        <p>With Raman Sanyal and Jeonghoon So. <a href="https://arxiv.org/abs/1812.07491">arXiv</a></p>
+        <div class="desclist">
+        <img src="images/s-hypersimplices.svg" class="descpreview"></img>
+        <div>
+            <b>Abstract:</b> 
+            An $S$-hypersimplex for $S\subseteq \{0,1,\dots,d\}$ is the convex
+            hull of all $0/1$-vectors of length $d$ with coordinate sum in $S$.
+            These polytopes generalize the classical hypersimplices as well as
+            cubes, crosspolytopes, and halfcubes. In this paper we study faces and
+            dissections of $S$-hypersimplices. Moreover, we show that monotone
+            path polytopes of $S$-hypersimplices yield all types of
+            multipermutahedra. In analogy to cubes, we also show that the number
+            of simplices in a pulling triangulation of a halfcube is independent
+            of the pulling order.
+        </div>
+        </div>
+
+
+        <h2>New Eberhard-type theorems</h2>        
+        <p>Master thesis. Supervision by Ulrich Brehm. <a href="master.pdf">PDF</a></p>
+        <div class="desclist">
+        <img src="images/eberhard.svg" class="descpreview"></img>
+        <div>
+            <b>Abstract:</b> 
+            Eberhard-type theorems are statements about the realizability of a
+            polytope (or more general polyhedral maps) given the valency of its
+            vertices and sizes of its polygonal faces up to a linear degree
+            of freedom. We present new theorems of Eberhard-type where we allow
+            adding two kinds of polygons and one type of vertices. We derive a
+            full classification of these results.
+        </div>
+        </div>
+
+        </div>
+
+        <code class="banner">
+            <em class="keyword">\catcode</em>`=13<br />
+            <em class="keyword">\def</em><em class="keyword">\adddisplayspace</em>#1{<em class="keyword">\mathchoice</em>{\ #1\ }{#1}{#1}{#1}}<br />
+            <em class="keyword">\def</em>={<em class="keyword">\adddisplayspace</em>{<em class="keyword">\char</em>`=}}<br />
+            <em class="keyword">\def</em><em class="keyword">\={\char</em>`=}<br />
+            <em class="keyword">\catcode</em>`=12<br />
+            <em class="keyword">\everydisplay</em><em class="keyword">\expandafter</em>{<br />
+            <em class="keyword">\the</em><em class="keyword">\everydisplay</em> <em class="keyword">\catcode</em>`=13<br />
+            <em class="keyword">\def</em><em class="keyword">\defeq</em>{<em class="keyword">\adddisplayspace</em><em class="keyword">\coloneqq</em>}<br />
+            <em class="keyword">\def</em><em class="keyword">\eqdef</em>{<em class="keyword">\adddisplayspace</em><em class="keyword">\eqqcolon</em>}<br />
+            }
+         </code>
+    </div>    
+</body>
+</html>
+
+
