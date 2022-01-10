@@ -2,30 +2,1487 @@
 <html style="width: 100%; height: 100%" >
 <head>
     <meta charset="UTF-8">
+    <link href="style.css" rel="stylesheet" type="text/css" media="all"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.png" />
     <title>Molekularis</title>
-</head>
-<body style="width: 100%; height: 100%; margin: 0pt">
-<canvas id="canvas" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></canvas>
-<script>
-
-var width, height;
-var canvas = document.getElementById("canvas");
-var ctx, update;
-
-function resize() {
-    width = document.body.clientWidth;
-    canvas.width = width;
-    height = document.body.clientHeight;
-    canvas.height = height;
-    update(width, height, 0, 0, -1);
+    <style>
+canvas {
+    border: 1px solid black;
+    width: 100px;
+    height: 100px;
+    z-index: 0;
+    background-color: #B4B4B4;
+    transition: background-color 0.5s, width 0.5s, height 0.5s, top 0.5s, right 0.5s, left 0.5s, bottom 0.5s;
 }
 
-function click(event) {
-    event.preventDefault();
-    update(width, height, event.clientX, event.clientY, event.button);
-    return false;
+.controlBtn {
+    position: fixed;
+    z-index: 2;
+    background-color: #777777;
+    border: 1px solid black;
+    width: 30px;
+    height: 30px;
+    opacity: 0;
+    visibilty: hidden;
+    pointer-events: visible;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+.controlBtn:hover {
+    background-color: #888888;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 102px);
+  grid-gap: 1rem;
+  justify-content: space-between;
+}
+</style>
+</head>
+<body>
+    <div class="main">
+
+        <ul class="nav">
+            <li class="nav"> <a href="index.html">Home</a></li>
+            <li class="nav"> <a href="math.html">Math</a></li>
+            <li class="nav"> <a href="projects.html">Projects</a></li>
+            <li class="nav"> <a href="molekularis.html" class="active">Molekularis</a></li>
+        </ul>
+
+        <code class="banner">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;O-O<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\<br />
+&nbsp;&nbsp;O-N&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;N-N<br />
+&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\<br />
+O&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H-O&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;O<br />
+&nbsp;\&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;/<br />
+&nbsp;&nbsp;N-O&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;N-H<br />
+        </code>
+    <button class="controlBtn" style="right: 10px; top: 10px;" id="closeBtn">×</button>
+    <button class="controlBtn" style="left:  10px; top: 10px;" id="undoBtn">⯇</button>
+    <button class="controlBtn" style="left:  50px; top: 10px;" id="redoBtn">⯈</button>
+
+        <div class="content">
+        <h1>Rules</h1>
+
+        <p>Atoms of type <b>H</b>, <b>O</b>, <b>N</b>, <b>C</b> are layed out on a hexagonal grid. To
+        solve the puzzle, add a number of connections (from zero to three)
+        between neighboring atoms, such that</p>
+
+        <ol>
+        <li>The number of connections to an atom of type <b>H</b>, <b>O</b>, <b>N</b> or <b>C</b> are one, two, three, and four, respectively.</li>
+        <li>Every two atoms are connected by a path formed by the connections.</li>
+        </ol>
+
+        <h2>How to play</h2>    
+        <p>Left and right click increases or decreases the number of
+        connections between two atoms. Middle clicking on a connection
+        adds a vertical bar indicating that the final number of connections
+        has been established.
+
+        Press <b>y</b> or <b>z</b> on the keyboard to undo the last step.</p>
+
+        <h1>Small</h1>
+    <div class="grid">
+<canvas>      N-N      
+     /   \     
+  C-O     C-C  
+ /   \   /   \ 
+C     N-O     N
+ \   /   \   / 
+  O-N     N-O  
+ /   \   /   \ 
+N     C-C     N
+ \   /   \   / 
+  O-O     N-N  
+     \   /     
+      O-C      
+</canvas>
+<canvas>      C-O      
+     /   \     
+  C-N     C-N  
+ /   \   /   \ 
+C     O-O     N
+ \   /   \   / 
+  O-N     O-N  
+ /   \   /   \ 
+N     N-N     N
+ \   /   \   / 
+  N-C     O-N  
+     \   /     
+      C-N      
+</canvas>
+<canvas>      N-C      
+     /   \     
+  N-O     O-C  
+ /   \   /   \ 
+N     N-C     C
+ \   /   \   / 
+  N-N     O-O  
+ /   \   /   \ 
+N     C-N     N
+ \   /   \   / 
+  N-O     N-C  
+     \   /     
+      N-O      
+</canvas>
+<canvas>      C-O      
+     /   \     
+  O-N     N-C  
+ /   \   /   \ 
+C     N-N     C
+ \   /   \   / 
+  N-N     N-N  
+ /   \   /   \ 
+O     O-O     C
+ \   /   \   / 
+  O-C     O-O  
+     \   /     
+      N-N      
+</canvas>
+<canvas>      O-N      
+     /   \     
+  C-C     O-O  
+ /   \   /   \ 
+O     C-C     N
+ \   /   \   / 
+  O-O     O-N  
+ /   \   /   \ 
+O     O-N     N
+ \   /   \   / 
+  N-O     O-O  
+     \   /     
+      N-N      
+</canvas>
+<canvas>      N-C      
+     /   \     
+  O-C     N-O  
+ /   \   /   \ 
+N     O-O     C
+ \   /   \   / 
+  N-O     N-N  
+ /   \   /   \ 
+N     O-O     N
+ \   /   \   / 
+  O-O     C-N  
+     \   /     
+      O-N      
+</canvas>
+<canvas>      N-N      
+     /   \     
+  C-O     N-N  
+ /   \   /   \ 
+C     N-C     N
+ \   /   \   / 
+  O-O     C-N  
+ /   \   /   \ 
+C     O-N     C
+ \   /   \   / 
+  N-N     O-O  
+     \   /     
+      O-O      
+</canvas>
+<canvas>      O-O      
+     /   \     
+  N-O     O-O  
+ /   \   /   \ 
+N     O-C     C
+ \   /   \   / 
+  O-C     N-N  
+ /   \   /   \ 
+N     N-O     N
+ \   /   \   / 
+  N-O     O-N  
+     \   /     
+      N-O      
+</canvas>
+<canvas>      N-N      
+     /   \     
+  C-O     O-C  
+ /   \   /   \ 
+N     N-O     C
+ \   /   \   / 
+  C-N     O-N  
+ /   \   /   \ 
+C     N-N     O
+ \   /   \   / 
+  O-N     O-N  
+     \   /     
+      C-O      
+</canvas>
+<canvas>      N-O      
+     /   \     
+  N-N     C-O  
+ /   \   /   \ 
+O     N-N     N
+ \   /   \   / 
+  N-N     O-N  
+ /   \   /   \ 
+N     N-N     N
+ \   /   \   / 
+  O-N     N-N  
+     \   /     
+      O-C      
+</canvas>
+<canvas>      O-N      
+     /   \     
+  O-N     O-N  
+ /   \   /   \ 
+O     O-O     N
+ \   /   \   / 
+  N-O     C-C  
+ /   \   /   \ 
+O     N-N     O
+ \   /   \   / 
+  N-O     O-O  
+     \   /     
+      O-O      
+</canvas>
+<canvas>      C-N      
+     /   \     
+  N-O     N-N  
+ /   \   /   \ 
+N     O-O     O
+ \   /   \   / 
+  N-N     C-O  
+ /   \   /   \ 
+O     N-C     N
+ \   /   \   / 
+  N-C     O-N  
+     \   /     
+      O-N      
+</canvas>
+<canvas>      N-O      
+     /   \     
+  N-N     N-O  
+ /   \   /   \ 
+O     O-N     N
+ \   /   \   / 
+  O-O     N-O  
+ /   \   /   \ 
+N     N-O     O
+ \   /   \   / 
+  O-C     N-C  
+     \   /     
+      C-C      
+</canvas>
+<canvas>      C-O      
+     /   \     
+  O-N     C-C  
+ /   \   /   \ 
+C     N-O     O
+ \   /   \   / 
+  C-N     N-C  
+ /   \   /   \ 
+O     N-O     O
+ \   /   \   / 
+  N-N     O-N  
+     \   /     
+      N-N      
+</canvas>
+<canvas>      N-N      
+     /   \     
+  N-N     N-N  
+ /   \   /   \ 
+N     N-N     N
+ \   /   \   / 
+  O-C     O-O  
+ /   \   /   \ 
+N     O-N     N
+ \   /   \   / 
+  N-O     C-O  
+     \   /     
+      C-C      
+</canvas>
+<canvas>      C-N      
+     /   \     
+  C-O     N-N  
+ /   \   /   \ 
+C     C-C     N
+ \   /   \   / 
+  N-N     N-O  
+ /   \   /   \ 
+C     O-N     N
+ \   /   \   / 
+  N-O     N-N  
+     \   /     
+      O-C      
+</canvas>
+<canvas>      N-N      
+     /   \     
+  O-N     N-O  
+ /   \   /   \ 
+N     O-C     O
+ \   /   \   / 
+  C-N     O-O  
+ /   \   /   \ 
+N     C-N     O
+ \   /   \   / 
+  N-O     N-N  
+     \   /     
+      N-O      
+</canvas>
+<canvas>      N-O      
+     /   \     
+  C-C     N-C  
+ /   \   /   \ 
+C     N-N     C
+ \   /   \   / 
+  O-C     C-N  
+ /   \   /   \ 
+N     O-C     C
+ \   /   \   / 
+  N-O     N-O  
+     \   /     
+      N-N      
+</canvas>
+<canvas>      C-O      
+     /   \     
+  O-C     O-C  
+ /   \   /   \ 
+O     C-O     N
+ \   /   \   / 
+  O-C     C-O  
+ /   \   /   \ 
+C     O-O     C
+ \   /   \   / 
+  N-N     O-C  
+     \   /     
+      C-N      
+</canvas>
+<canvas>      C-O      
+     /   \     
+  O-N     O-O  
+ /   \   /   \ 
+N     N-C     O
+ \   /   \   / 
+  O-O     C-O  
+ /   \   /   \ 
+O     O-O     N
+ \   /   \   / 
+  N-N     O-N  
+     \   /     
+      O-N      
+</canvas>
+    </div>
+
+    <h1>Medium</h1>
+    <div class="grid">
+<canvas>          O-O          
+         /   \         
+      O-N     C-O      
+     /   \   /   \     
+  C-N     O-O     N-N  
+ /   \   /   \   /   \ 
+O     O-C     N-N     N
+ \   /   \   /   \   / 
+  O-N     N-O     C-O  
+ /   \   /   \   /   \ 
+O     H-C     N-O     H
+ \   /   \   /   \   / 
+  C-N     C-C     O-N  
+ /   \   /   \   /   \ 
+N     O-C     N-N     O
+ \   /   \   /   \   / 
+  N-O     C-O     O-N  
+     \   /   \   /     
+      O-O     N-O      
+         \   /         
+          N-N          
+</canvas>
+<canvas>          C-O          
+         /   \         
+      N-N     O-O      
+     /   \   /   \     
+  O-N     N-N     N-C  
+ /   \   /   \   /   \ 
+O     O-O     O-O     O
+ \   /   \   /   \   / 
+  C-O     N-N     N-N  
+ /   \   /   \   /   \ 
+N     N-O     O-O     C
+ \   /   \   /   \   / 
+  O-C     O-N     C-N  
+ /   \   /   \   /   \ 
+O     C-O     O-N     N
+ \   /   \   /   \   / 
+  O-O     O-C     O-N  
+     \   /   \   /     
+      O-C     C-C      
+         \   /         
+          C-N          
+</canvas>
+<canvas>          H-O          
+         /   \         
+      O-C     C-H      
+     /   \   /   \     
+  N-O     N-N     N-N  
+ /   \   /   \   /   \ 
+C     N-O     O-O     C
+ \   /   \   /   \   / 
+  N-O     N-N     N-N  
+ /   \   /   \   /   \ 
+N     O-N     N-C     N
+ \   /   \   /   \   / 
+  C-C     N-O     N-C  
+ /   \   /   \   /   \ 
+C     O-O     N-O     C
+ \   /   \   /   \   / 
+  O-N     N-O     H-O  
+     \   /   \   /     
+      N-C     O-O      
+         \   /         
+          N-N          
+</canvas>
+<canvas>          N-O          
+         /   \         
+      O-O     H-O      
+     /   \   /   \     
+  H-N     C-O     C-N  
+ /   \   /   \   /   \ 
+O     O-N     C-N     O
+ \   /   \   /   \   / 
+  C-C     O-C     N-C  
+ /   \   /   \   /   \ 
+O     O-H     N-O     H
+ \   /   \   /   \   / 
+  N-O     C-O     C-N  
+ /   \   /   \   /   \ 
+C     N-N     O-C     N
+ \   /   \   /   \   / 
+  O-O     N-N     N-N  
+     \   /   \   /     
+      N-O     N-O      
+         \   /         
+          H-N          
+</canvas>
+<canvas>          O-N          
+         /   \         
+      O-C     N-O      
+     /   \   /   \     
+  N-O     N-O     O-N  
+ /   \   /   \   /   \ 
+N     C-N     N-N     O
+ \   /   \   /   \   / 
+  C-N     N-H     O-H  
+ /   \   /   \   /   \ 
+C     O-O     O-O     N
+ \   /   \   /   \   / 
+  O-N     C-C     N-C  
+ /   \   /   \   /   \ 
+N     O-N     H-O     O
+ \   /   \   /   \   / 
+  N-C     O-O     O-O  
+     \   /   \   /     
+      N-O     C-H      
+         \   /         
+          O-O          
+</canvas>
+<canvas>          O-N          
+         /   \         
+      N-N     C-N      
+     /   \   /   \     
+  N-C     O-O     N-O  
+ /   \   /   \   /   \ 
+N     O-O     O-C     O
+ \   /   \   /   \   / 
+  O-C     N-N     C-N  
+ /   \   /   \   /   \ 
+O     N-C     N-N     O
+ \   /   \   /   \   / 
+  N-O     N-O     N-O  
+ /   \   /   \   /   \ 
+N     O-N     O-O     H
+ \   /   \   /   \   / 
+  N-N     N-N     C-N  
+     \   /   \   /     
+      N-N     C-O      
+         \   /         
+          C-O          
+</canvas>
+<canvas>          N-C          
+         /   \         
+      N-N     C-H      
+     /   \   /   \     
+  N-O     C-C     C-C  
+ /   \   /   \   /   \ 
+O     N-C     O-O     N
+ \   /   \   /   \   / 
+  N-N     N-O     O-O  
+ /   \   /   \   /   \ 
+C     O-C     O-O     O
+ \   /   \   /   \   / 
+  N-N     O-C     N-N  
+ /   \   /   \   /   \ 
+O     H-O     C-O     N
+ \   /   \   /   \   / 
+  N-N     C-C     O-O  
+     \   /   \   /     
+      O-O     O-N      
+         \   /         
+          N-O          
+</canvas>
+<canvas>          C-N          
+         /   \         
+      C-C     N-C      
+     /   \   /   \     
+  O-C     N-O     C-N  
+ /   \   /   \   /   \ 
+H     O-O     O-N     O
+ \   /   \   /   \   / 
+  O-C     O-O     C-C  
+ /   \   /   \   /   \ 
+O     O-O     O-O     C
+ \   /   \   /   \   / 
+  O-N     N-O     N-N  
+ /   \   /   \   /   \ 
+N     N-N     O-O     C
+ \   /   \   /   \   / 
+  O-O     N-H     N-O  
+     \   /   \   /     
+      O-C     O-C      
+         \   /         
+          O-O          
+</canvas>
+<canvas>          N-C          
+         /   \         
+      O-O     C-O      
+     /   \   /   \     
+  O-O     C-N     O-O  
+ /   \   /   \   /   \ 
+O     O-N     O-O     O
+ \   /   \   /   \   / 
+  N-N     O-O     C-O  
+ /   \   /   \   /   \ 
+C     O-O     O-O     N
+ \   /   \   /   \   / 
+  O-H     N-N     N-C  
+ /   \   /   \   /   \ 
+O     C-C     O-N     C
+ \   /   \   /   \   / 
+  N-C     O-C     N-C  
+     \   /   \   /     
+      O-O     O-O      
+         \   /         
+          N-O          
+</canvas>
+<canvas>          N-O          
+         /   \         
+      C-C     N-N      
+     /   \   /   \     
+  O-C     O-C     N-N  
+ /   \   /   \   /   \ 
+C     O-O     O-O     N
+ \   /   \   /   \   / 
+  C-C     O-N     N-C  
+ /   \   /   \   /   \ 
+O     C-O     C-N     O
+ \   /   \   /   \   / 
+  O-N     C-N     N-N  
+ /   \   /   \   /   \ 
+C     O-N     H-H     C
+ \   /   \   /   \   / 
+  C-N     O-N     N-N  
+     \   /   \   /     
+      C-N     C-O      
+         \   /         
+          N-O          
+</canvas>
+<canvas>          N-O          
+         /   \         
+      O-C     C-O      
+     /   \   /   \     
+  O-N     O-O     N-C  
+ /   \   /   \   /   \ 
+O     C-C     N-C     O
+ \   /   \   /   \   / 
+  O-O     O-O     O-N  
+ /   \   /   \   /   \ 
+O     O-N     N-O     N
+ \   /   \   /   \   / 
+  N-O     N-N     H-N  
+ /   \   /   \   /   \ 
+N     O-O     C-O     O
+ \   /   \   /   \   / 
+  C-C     N-O     N-O  
+     \   /   \   /     
+      N-O     O-C      
+         \   /         
+          N-O          
+</canvas>
+<canvas>          O-O          
+         /   \         
+      N-O     N-N      
+     /   \   /   \     
+  O-C     O-O     N-O  
+ /   \   /   \   /   \ 
+O     N-O     O-O     O
+ \   /   \   /   \   / 
+  O-N     C-O     C-O  
+ /   \   /   \   /   \ 
+H     O-O     N-N     N
+ \   /   \   /   \   / 
+  N-O     O-C     O-N  
+ /   \   /   \   /   \ 
+C     O-N     O-C     N
+ \   /   \   /   \   / 
+  O-N     O-O     O-O  
+     \   /   \   /     
+      O-C     N-O      
+         \   /         
+          C-O          
+</canvas>
+<canvas>          N-N          
+         /   \         
+      O-O     O-O      
+     /   \   /   \     
+  C-O     N-O     C-N  
+ /   \   /   \   /   \ 
+N     H-O     N-C     N
+ \   /   \   /   \   / 
+  N-C     C-N     O-C  
+ /   \   /   \   /   \ 
+N     N-N     O-N     C
+ \   /   \   /   \   / 
+  N-H     O-C     O-O  
+ /   \   /   \   /   \ 
+H     O-N     O-O     C
+ \   /   \   /   \   / 
+  O-N     C-N     O-C  
+     \   /   \   /     
+      C-C     O-O      
+         \   /         
+          N-N          
+</canvas>
+<canvas>          O-O          
+         /   \         
+      N-C     N-N      
+     /   \   /   \     
+  H-N     O-C     O-N  
+ /   \   /   \   /   \ 
+C     C-O     C-N     O
+ \   /   \   /   \   / 
+  C-N     N-O     C-C  
+ /   \   /   \   /   \ 
+N     O-O     N-O     N
+ \   /   \   /   \   / 
+  N-N     N-O     N-N  
+ /   \   /   \   /   \ 
+C     N-N     N-O     N
+ \   /   \   /   \   / 
+  C-O     N-O     N-H  
+     \   /   \   /     
+      H-C     N-C      
+         \   /         
+          O-O          
+</canvas>
+<canvas>          O-O          
+         /   \         
+      H-C     C-O      
+     /   \   /   \     
+  H-O     O-N     C-O  
+ /   \   /   \   /   \ 
+N     C-N     N-H     O
+ \   /   \   /   \   / 
+  N-O     C-O     O-C  
+ /   \   /   \   /   \ 
+H     N-N     C-C     N
+ \   /   \   /   \   / 
+  N-N     O-C     O-C  
+ /   \   /   \   /   \ 
+C     N-C     N-O     O
+ \   /   \   /   \   / 
+  C-O     N-N     O-O  
+     \   /   \   /     
+      N-N     N-N      
+         \   /         
+          O-O          
+</canvas>
+<canvas>          N-C          
+         /   \         
+      N-O     O-O      
+     /   \   /   \     
+  N-N     N-C     N-O  
+ /   \   /   \   /   \ 
+N     N-O     N-N     N
+ \   /   \   /   \   / 
+  O-N     O-O     O-N  
+ /   \   /   \   /   \ 
+N     O-N     O-O     O
+ \   /   \   /   \   / 
+  N-O     O-N     N-O  
+ /   \   /   \   /   \ 
+O     O-O     O-N     O
+ \   /   \   /   \   / 
+  O-N     C-O     N-H  
+     \   /   \   /     
+      O-N     C-N      
+         \   /         
+          O-O          
+</canvas>
+<canvas>          O-O          
+         /   \         
+      O-O     N-C      
+     /   \   /   \     
+  N-N     O-N     C-O  
+ /   \   /   \   /   \ 
+N     O-N     C-O     N
+ \   /   \   /   \   / 
+  N-C     N-H     O-O  
+ /   \   /   \   /   \ 
+O     N-N     N-O     O
+ \   /   \   /   \   / 
+  O-C     N-O     N-C  
+ /   \   /   \   /   \ 
+N     O-N     N-C     O
+ \   /   \   /   \   / 
+  N-O     C-O     N-O  
+     \   /   \   /     
+      O-N     N-O      
+         \   /         
+          O-C          
+</canvas>
+<canvas>          N-C          
+         /   \         
+      H-C     C-N      
+     /   \   /   \     
+  N-N     N-O     O-N  
+ /   \   /   \   /   \ 
+O     N-C     N-O     O
+ \   /   \   /   \   / 
+  C-N     O-O     O-O  
+ /   \   /   \   /   \ 
+N     N-O     N-O     O
+ \   /   \   /   \   / 
+  H-O     N-H     O-O  
+ /   \   /   \   /   \ 
+N     O-O     N-O     N
+ \   /   \   /   \   / 
+  C-N     O-N     O-O  
+     \   /   \   /     
+      N-C     N-N      
+         \   /         
+          O-O          
+</canvas>
+<canvas>          O-C          
+         /   \         
+      O-N     C-O      
+     /   \   /   \     
+  N-C     O-O     O-N  
+ /   \   /   \   /   \ 
+O     O-O     O-O     N
+ \   /   \   /   \   / 
+  O-O     O-O     O-O  
+ /   \   /   \   /   \ 
+N     N-O     O-N     N
+ \   /   \   /   \   / 
+  N-N     N-O     N-N  
+ /   \   /   \   /   \ 
+C     N-O     H-O     N
+ \   /   \   /   \   / 
+  C-N     C-N     O-O  
+     \   /   \   /     
+      O-O     O-O      
+         \   /         
+          N-N          
+</canvas>
+<canvas>          O-N          
+         /   \         
+      O-O     O-O      
+     /   \   /   \     
+  C-N     H-O     N-C  
+ /   \   /   \   /   \ 
+N     O-N     N-O     N
+ \   /   \   /   \   / 
+  C-O     N-C     O-N  
+ /   \   /   \   /   \ 
+N     H-O     O-N     N
+ \   /   \   /   \   / 
+  N-N     N-O     N-N  
+ /   \   /   \   /   \ 
+C     N-O     N-O     N
+ \   /   \   /   \   / 
+  N-N     N-O     N-N  
+     \   /   \   /     
+      C-O     O-O      
+         \   /         
+          O-N          
+</canvas>
+    </div>
+
+    <h1>Large</h1>
+    <div class="grid">
+<canvas>              O-O              
+             /   \             
+          C-N     C-N          
+         /   \   /   \         
+      O-N     N-N     O-N      
+     /   \   /   \   /   \     
+  N-O     N-N     N-O     O-N  
+ /   \   /   \   /   \   /   \ 
+C     O-N     O-O     C-N     N
+ \   /   \   /   \   /   \   / 
+  N-C     O-O     C-H     N-N  
+ /   \   /   \   /   \   /   \ 
+N     N-N     N-C     N-N     O
+ \   /   \   /   \   /   \   / 
+  N-O     O-C     H-O     N-N  
+ /   \   /   \   /   \   /   \ 
+N     O-N     N-N     N-O     H
+ \   /   \   /   \   /   \   / 
+  N-N     N-O     O-O     O-C  
+ /   \   /   \   /   \   /   \ 
+N     C-C     C-O     O-O     O
+ \   /   \   /   \   /   \   / 
+  N-N     N-N     N-N     C-N  
+     \   /   \   /   \   /     
+      O-O     N-N     N-O      
+         \   /   \   /         
+          C-N     N-O          
+             \   /             
+              N-N              
+</canvas>
+<canvas>              C-C              
+             /   \             
+          N-N     O-H          
+         /   \   /   \         
+      N-C     O-C     N-O      
+     /   \   /   \   /   \     
+  C-C     H-H     N-C     N-N  
+ /   \   /   \   /   \   /   \ 
+H     H-C     C-O     O-O     N
+ \   /   \   /   \   /   \   / 
+  O-C     C-N     N-N     N-O  
+ /   \   /   \   /   \   /   \ 
+O     N-N     O-C     O-C     O
+ \   /   \   /   \   /   \   / 
+  O-C     C-O     N-H     H-O  
+ /   \   /   \   /   \   /   \ 
+N     N-O     O-O     C-N     O
+ \   /   \   /   \   /   \   / 
+  N-N     N-C     O-O     C-O  
+ /   \   /   \   /   \   /   \ 
+O     N-O     C-C     N-O     O
+ \   /   \   /   \   /   \   / 
+  C-N     O-C     N-C     N-N  
+     \   /   \   /   \   /     
+      O-N     N-N     N-O      
+         \   /   \   /         
+          O-O     N-O          
+             \   /             
+              C-N              
+</canvas>
+<canvas>              O-N              
+             /   \             
+          N-O     C-O          
+         /   \   /   \         
+      H-O     O-O     O-O      
+     /   \   /   \   /   \     
+  O-O     O-N     N-N     O-O  
+ /   \   /   \   /   \   /   \ 
+O     C-O     N-O     N-C     N
+ \   /   \   /   \   /   \   / 
+  O-C     O-C     O-N     O-C  
+ /   \   /   \   /   \   /   \ 
+O     C-O     O-O     O-O     O
+ \   /   \   /   \   /   \   / 
+  N-C     H-C     N-O     C-N  
+ /   \   /   \   /   \   /   \ 
+H     N-O     O-O     N-O     O
+ \   /   \   /   \   /   \   / 
+  O-N     O-N     N-O     N-N  
+ /   \   /   \   /   \   /   \ 
+O     C-O     O-O     O-N     N
+ \   /   \   /   \   /   \   / 
+  O-O     O-N     O-O     N-O  
+     \   /   \   /   \   /     
+      O-N     C-N     N-C      
+         \   /   \   /         
+          N-O     O-H          
+             \   /             
+              H-O              
+</canvas>
+<canvas>              H-O              
+             /   \             
+          O-C     C-O          
+         /   \   /   \         
+      O-C     N-O     N-O      
+     /   \   /   \   /   \     
+  N-N     C-H     O-O     N-O  
+ /   \   /   \   /   \   /   \ 
+O     H-N     N-O     O-O     C
+ \   /   \   /   \   /   \   / 
+  H-O     O-C     H-C     N-N  
+ /   \   /   \   /   \   /   \ 
+N     C-O     N-O     N-C     O
+ \   /   \   /   \   /   \   / 
+  N-N     C-O     O-O     N-O  
+ /   \   /   \   /   \   /   \ 
+N     O-O     O-H     O-N     O
+ \   /   \   /   \   /   \   / 
+  C-C     O-O     O-N     N-N  
+ /   \   /   \   /   \   /   \ 
+O     N-O     N-C     O-O     O
+ \   /   \   /   \   /   \   / 
+  O-O     O-O     O-N     N-C  
+     \   /   \   /   \   /     
+      N-N     O-O     C-N      
+         \   /   \   /         
+          C-N     C-O          
+             \   /             
+              O-C              
+</canvas>
+<canvas>              N-N              
+             /   \             
+          N-O     O-O          
+         /   \   /   \         
+      C-C     N-N     N-O      
+     /   \   /   \   /   \     
+  C-N     N-C     O-C     O-O  
+ /   \   /   \   /   \   /   \ 
+N     N-C     O-O     O-O     N
+ \   /   \   /   \   /   \   / 
+  O-O     N-O     O-N     O-N  
+ /   \   /   \   /   \   /   \ 
+O     O-O     O-O     O-O     N
+ \   /   \   /   \   /   \   / 
+  N-C     C-O     N-N     O-C  
+ /   \   /   \   /   \   /   \ 
+O     O-N     O-H     H-H     N
+ \   /   \   /   \   /   \   / 
+  O-N     O-C     N-C     N-N  
+ /   \   /   \   /   \   /   \ 
+O     O-O     C-O     O-H     C
+ \   /   \   /   \   /   \   / 
+  C-N     O-O     O-H     O-N  
+     \   /   \   /   \   /     
+      O-O     O-O     N-N      
+         \   /   \   /         
+          N-C     N-N          
+             \   /             
+              O-O              
+</canvas>
+<canvas>              N-O              
+             /   \             
+          N-N     N-N          
+         /   \   /   \         
+      O-C     O-O     N-C      
+     /   \   /   \   /   \     
+  N-C     O-N     O-N     C-N  
+ /   \   /   \   /   \   /   \ 
+C     O-N     C-N     H-H     N
+ \   /   \   /   \   /   \   / 
+  N-O     C-O     N-C     O-C  
+ /   \   /   \   /   \   /   \ 
+O     C-N     O-O     O-C     C
+ \   /   \   /   \   /   \   / 
+  N-C     O-N     O-N     N-N  
+ /   \   /   \   /   \   /   \ 
+O     N-N     C-N     N-O     C
+ \   /   \   /   \   /   \   / 
+  N-C     N-O     C-O     N-N  
+ /   \   /   \   /   \   /   \ 
+N     N-O     N-O     O-C     C
+ \   /   \   /   \   /   \   / 
+  N-O     O-N     O-C     N-C  
+     \   /   \   /   \   /     
+      O-O     O-O     O-O      
+         \   /   \   /         
+          O-O     C-H          
+             \   /             
+              O-O              
+</canvas>
+<canvas>              N-N              
+             /   \             
+          O-N     N-N          
+         /   \   /   \         
+      C-O     N-O     N-N      
+     /   \   /   \   /   \     
+  C-C     O-N     H-N     O-N  
+ /   \   /   \   /   \   /   \ 
+C     O-N     C-N     N-O     O
+ \   /   \   /   \   /   \   / 
+  N-N     C-H     N-O     N-H  
+ /   \   /   \   /   \   /   \ 
+O     C-C     N-O     H-N     N
+ \   /   \   /   \   /   \   / 
+  O-O     C-N     C-N     C-N  
+ /   \   /   \   /   \   /   \ 
+C     O-N     H-O     N-N     H
+ \   /   \   /   \   /   \   / 
+  N-O     O-N     O-H     C-N  
+ /   \   /   \   /   \   /   \ 
+N     N-N     N-N     O-C     O
+ \   /   \   /   \   /   \   / 
+  C-N     C-O     O-N     O-O  
+     \   /   \   /   \   /     
+      O-C     O-O     O-O      
+         \   /   \   /         
+          H-N     N-H          
+             \   /             
+              O-O              
+</canvas>
+<canvas>              N-N              
+             /   \             
+          N-N     H-O          
+         /   \   /   \         
+      O-C     O-H     N-O      
+     /   \   /   \   /   \     
+  O-O     O-O     O-O     N-N  
+ /   \   /   \   /   \   /   \ 
+N     C-O     N-O     O-O     O
+ \   /   \   /   \   /   \   / 
+  N-N     O-N     C-C     C-O  
+ /   \   /   \   /   \   /   \ 
+C     C-O     C-C     N-O     N
+ \   /   \   /   \   /   \   / 
+  C-H     O-O     H-N     O-C  
+ /   \   /   \   /   \   /   \ 
+O     N-C     O-C     N-N     H
+ \   /   \   /   \   /   \   / 
+  C-N     N-H     N-O     N-O  
+ /   \   /   \   /   \   /   \ 
+C     H-C     O-N     C-O     H
+ \   /   \   /   \   /   \   / 
+  C-N     C-N     O-O     N-N  
+     \   /   \   /   \   /     
+      C-N     H-C     C-N      
+         \   /   \   /         
+          C-C     C-N          
+             \   /             
+              O-N              
+</canvas>
+<canvas>              N-N              
+             /   \             
+          N-C     C-O          
+         /   \   /   \         
+      N-N     N-N     O-N      
+     /   \   /   \   /   \     
+  O-N     N-O     N-O     O-O  
+ /   \   /   \   /   \   /   \ 
+O     N-N     C-O     O-O     O
+ \   /   \   /   \   /   \   / 
+  O-O     O-H     C-O     C-N  
+ /   \   /   \   /   \   /   \ 
+O     O-C     C-C     N-O     N
+ \   /   \   /   \   /   \   / 
+  O-N     H-C     O-N     O-C  
+ /   \   /   \   /   \   /   \ 
+O     O-H     O-C     C-N     H
+ \   /   \   /   \   /   \   / 
+  C-O     O-C     N-O     C-C  
+ /   \   /   \   /   \   /   \ 
+N     N-O     N-O     O-O     N
+ \   /   \   /   \   /   \   / 
+  O-O     C-O     N-N     O-N  
+     \   /   \   /   \   /     
+      O-C     O-O     C-N      
+         \   /   \   /         
+          O-O     O-N          
+             \   /             
+              O-N              
+</canvas>
+<canvas>              O-O              
+             /   \             
+          N-C     N-H          
+         /   \   /   \         
+      N-N     O-N     C-O      
+     /   \   /   \   /   \     
+  N-N     N-N     C-N     C-O  
+ /   \   /   \   /   \   /   \ 
+N     C-O     O-C     N-N     N
+ \   /   \   /   \   /   \   / 
+  O-O     O-O     O-N     H-N  
+ /   \   /   \   /   \   /   \ 
+O     O-O     O-O     O-O     O
+ \   /   \   /   \   /   \   / 
+  C-O     O-C     C-O     N-N  
+ /   \   /   \   /   \   /   \ 
+O     N-O     O-C     O-N     C
+ \   /   \   /   \   /   \   / 
+  N-O     O-C     C-O     O-N  
+ /   \   /   \   /   \   /   \ 
+N     O-C     O-O     N-O     O
+ \   /   \   /   \   /   \   / 
+  N-C     O-O     N-C     O-N  
+     \   /   \   /   \   /     
+      O-O     O-O     N-N      
+         \   /   \   /         
+          N-C     O-O          
+             \   /             
+              N-H              
+</canvas>
+<canvas>              N-O              
+             /   \             
+          N-O     C-O          
+         /   \   /   \         
+      O-N     H-N     H-O      
+     /   \   /   \   /   \     
+  C-N     C-N     C-N     O-C  
+ /   \   /   \   /   \   /   \ 
+C     C-N     C-N     N-N     C
+ \   /   \   /   \   /   \   / 
+  O-C     O-O     C-N     N-C  
+ /   \   /   \   /   \   /   \ 
+O     N-C     N-N     O-O     H
+ \   /   \   /   \   /   \   / 
+  O-N     O-H     N-N     H-H  
+ /   \   /   \   /   \   /   \ 
+O     N-N     N-N     O-O     N
+ \   /   \   /   \   /   \   / 
+  C-N     O-H     O-O     C-C  
+ /   \   /   \   /   \   /   \ 
+C     O-O     C-C     O-H     N
+ \   /   \   /   \   /   \   / 
+  O-N     O-O     C-C     O-C  
+     \   /   \   /   \   /     
+      C-O     N-N     C-N      
+         \   /   \   /         
+          N-C     O-O          
+             \   /             
+              H-O              
+</canvas>
+<canvas>              N-O              
+             /   \             
+          O-N     O-N          
+         /   \   /   \         
+      N-O     C-C     C-C      
+     /   \   /   \   /   \     
+  H-N     O-C     O-N     N-C  
+ /   \   /   \   /   \   /   \ 
+O     O-C     N-O     C-O     N
+ \   /   \   /   \   /   \   / 
+  N-H     N-C     C-O     O-C  
+ /   \   /   \   /   \   /   \ 
+O     O-C     C-O     O-O     C
+ \   /   \   /   \   /   \   / 
+  O-N     O-N     N-O     C-C  
+ /   \   /   \   /   \   /   \ 
+C     N-N     N-O     C-O     C
+ \   /   \   /   \   /   \   / 
+  C-C     N-N     H-C     O-N  
+ /   \   /   \   /   \   /   \ 
+O     N-O     C-N     O-N     N
+ \   /   \   /   \   /   \   / 
+  N-O     C-O     O-O     O-O  
+     \   /   \   /   \   /     
+      O-C     N-O     O-N      
+         \   /   \   /         
+          O-O     O-O          
+             \   /             
+              O-O              
+</canvas>
+<canvas>              N-N              
+             /   \             
+          O-C     O-H          
+         /   \   /   \         
+      N-C     O-O     N-N      
+     /   \   /   \   /   \     
+  N-N     N-O     O-N     O-N  
+ /   \   /   \   /   \   /   \ 
+O     H-O     O-C     N-N     N
+ \   /   \   /   \   /   \   / 
+  N-H     O-C     C-C     O-O  
+ /   \   /   \   /   \   /   \ 
+N     O-N     C-O     N-N     C
+ \   /   \   /   \   /   \   / 
+  N-N     N-N     O-N     C-C  
+ /   \   /   \   /   \   /   \ 
+O     C-C     C-C     O-O     N
+ \   /   \   /   \   /   \   / 
+  N-H     N-O     C-O     O-N  
+ /   \   /   \   /   \   /   \ 
+O     O-O     N-N     N-C     N
+ \   /   \   /   \   /   \   / 
+  C-C     C-O     C-N     O-N  
+     \   /   \   /   \   /     
+      N-C     O-C     O-N      
+         \   /   \   /         
+          O-N     C-O          
+             \   /             
+              C-C              
+</canvas>
+<canvas>              O-C              
+             /   \             
+          O-C     N-N          
+         /   \   /   \         
+      O-O     N-O     N-O      
+     /   \   /   \   /   \     
+  O-C     O-O     N-N     C-C  
+ /   \   /   \   /   \   /   \ 
+N     N-O     C-N     O-O     O
+ \   /   \   /   \   /   \   / 
+  N-N     O-H     N-O     O-N  
+ /   \   /   \   /   \   /   \ 
+N     C-O     N-N     C-O     N
+ \   /   \   /   \   /   \   / 
+  C-O     N-O     O-N     O-N  
+ /   \   /   \   /   \   /   \ 
+O     O-O     N-N     O-N     O
+ \   /   \   /   \   /   \   / 
+  O-O     C-O     H-O     O-C  
+ /   \   /   \   /   \   /   \ 
+C     O-C     N-O     C-C     O
+ \   /   \   /   \   /   \   / 
+  N-H     O-C     N-O     N-O  
+     \   /   \   /   \   /     
+      C-C     H-O     N-N      
+         \   /   \   /         
+          O-O     N-O          
+             \   /             
+              N-N              
+</canvas>
+<canvas>              O-C              
+             /   \             
+          O-O     C-H          
+         /   \   /   \         
+      N-N     O-N     N-O      
+     /   \   /   \   /   \     
+  O-O     N-O     C-C     H-O  
+ /   \   /   \   /   \   /   \ 
+O     O-O     N-O     O-O     O
+ \   /   \   /   \   /   \   / 
+  N-N     N-O     C-C     C-O  
+ /   \   /   \   /   \   /   \ 
+N     O-O     N-N     O-N     N
+ \   /   \   /   \   /   \   / 
+  O-N     C-O     O-C     N-C  
+ /   \   /   \   /   \   /   \ 
+O     C-C     O-N     H-C     N
+ \   /   \   /   \   /   \   / 
+  N-O     C-O     C-O     O-O  
+ /   \   /   \   /   \   /   \ 
+O     H-O     O-O     N-N     O
+ \   /   \   /   \   /   \   / 
+  N-C     N-C     N-O     C-N  
+     \   /   \   /   \   /     
+      O-C     O-C     N-O      
+         \   /   \   /         
+          N-N     H-N          
+             \   /             
+              C-O              
+</canvas>
+<canvas>              N-O              
+             /   \             
+          O-N     C-O          
+         /   \   /   \         
+      N-O     N-C     N-C      
+     /   \   /   \   /   \     
+  N-N     N-N     N-N     C-O  
+ /   \   /   \   /   \   /   \ 
+O     N-C     O-N     C-C     O
+ \   /   \   /   \   /   \   / 
+  O-O     O-C     N-O     C-O  
+ /   \   /   \   /   \   /   \ 
+O     O-C     N-C     O-O     O
+ \   /   \   /   \   /   \   / 
+  C-H     N-O     N-H     O-O  
+ /   \   /   \   /   \   /   \ 
+O     O-O     O-N     O-H     N
+ \   /   \   /   \   /   \   / 
+  H-O     C-O     N-C     O-N  
+ /   \   /   \   /   \   /   \ 
+O     N-C     N-O     N-N     H
+ \   /   \   /   \   /   \   / 
+  O-C     N-N     O-N     C-N  
+     \   /   \   /   \   /     
+      H-N     O-N     N-O      
+         \   /   \   /         
+          N-O     O-C          
+             \   /             
+              N-O              
+</canvas>
+<canvas>              O-N              
+             /   \             
+          N-N     C-N          
+         /   \   /   \         
+      C-N     C-N     O-N      
+     /   \   /   \   /   \     
+  N-N     O-C     N-H     C-C  
+ /   \   /   \   /   \   /   \ 
+N     N-O     C-C     C-O     O
+ \   /   \   /   \   /   \   / 
+  N-C     O-O     C-O     N-C  
+ /   \   /   \   /   \   /   \ 
+O     O-H     O-O     O-H     N
+ \   /   \   /   \   /   \   / 
+  C-C     C-N     N-C     O-C  
+ /   \   /   \   /   \   /   \ 
+N     H-C     N-O     N-O     C
+ \   /   \   /   \   /   \   / 
+  N-O     C-C     C-O     N-N  
+ /   \   /   \   /   \   /   \ 
+N     O-N     O-N     N-C     O
+ \   /   \   /   \   /   \   / 
+  O-C     O-C     C-C     N-O  
+     \   /   \   /   \   /     
+      C-C     C-C     O-N      
+         \   /   \   /         
+          N-O     C-N          
+             \   /             
+              N-C              
+</canvas>
+<canvas>              N-O              
+             /   \             
+          O-O     O-O          
+         /   \   /   \         
+      O-N     N-N     N-N      
+     /   \   /   \   /   \     
+  N-O     C-N     O-N     C-O  
+ /   \   /   \   /   \   /   \ 
+N     H-C     O-N     H-C     O
+ \   /   \   /   \   /   \   / 
+  C-C     N-N     H-O     N-N  
+ /   \   /   \   /   \   /   \ 
+H     C-C     N-O     N-O     O
+ \   /   \   /   \   /   \   / 
+  O-N     N-N     O-O     O-N  
+ /   \   /   \   /   \   /   \ 
+N     O-H     O-N     N-O     N
+ \   /   \   /   \   /   \   / 
+  C-C     C-N     N-C     C-C  
+ /   \   /   \   /   \   /   \ 
+C     C-O     N-O     O-O     C
+ \   /   \   /   \   /   \   / 
+  C-C     C-O     O-N     C-N  
+     \   /   \   /   \   /     
+      N-O     O-O     N-O      
+         \   /   \   /         
+          O-C     N-C          
+             \   /             
+              O-O              
+</canvas>
+<canvas>              O-O              
+             /   \             
+          N-O     O-O          
+         /   \   /   \         
+      H-C     C-N     N-O      
+     /   \   /   \   /   \     
+  N-N     O-O     N-N     N-C  
+ /   \   /   \   /   \   /   \ 
+O     N-N     O-H     N-N     N
+ \   /   \   /   \   /   \   / 
+  C-N     O-H     C-C     O-N  
+ /   \   /   \   /   \   /   \ 
+N     O-O     N-O     O-O     C
+ \   /   \   /   \   /   \   / 
+  H-N     N-O     N-N     H-C  
+ /   \   /   \   /   \   /   \ 
+O     O-O     H-C     O-O     C
+ \   /   \   /   \   /   \   / 
+  C-O     H-N     N-H     O-O  
+ /   \   /   \   /   \   /   \ 
+O     O-N     N-C     N-O     H
+ \   /   \   /   \   /   \   / 
+  C-C     O-N     O-C     N-O  
+     \   /   \   /   \   /     
+      O-N     O-O     N-O      
+         \   /   \   /         
+          N-N     C-O          
+             \   /             
+              N-O              
+</canvas>
+<canvas>              C-O              
+             /   \             
+          C-C     O-O          
+         /   \   /   \         
+      N-C     N-O     C-O      
+     /   \   /   \   /   \     
+  O-N     H-O     O-N     C-O  
+ /   \   /   \   /   \   /   \ 
+O     C-O     O-O     C-C     O
+ \   /   \   /   \   /   \   / 
+  N-C     N-O     H-N     C-O  
+ /   \   /   \   /   \   /   \ 
+C     N-H     C-N     H-O     N
+ \   /   \   /   \   /   \   / 
+  N-N     O-C     O-O     O-C  
+ /   \   /   \   /   \   /   \ 
+N     N-O     N-O     O-O     H
+ \   /   \   /   \   /   \   / 
+  N-C     O-C     O-C     O-N  
+ /   \   /   \   /   \   /   \ 
+N     C-C     O-N     C-O     H
+ \   /   \   /   \   /   \   / 
+  O-H     C-O     O-N     N-O  
+     \   /   \   /   \   /     
+      O-N     C-N     O-O      
+         \   /   \   /         
+          C-C     N-O          
+             \   /             
+              N-O              
+</canvas>
+    </div>
+
+    <h1>Gigantic</h1>
+    <div class="grid">
+    <canvas>                  O-O                  
+                 /   \                 
+              H-O     N-C              
+             /   \   /   \             
+          O-O     O-O     C-H          
+         /   \   /   \   /   \         
+      N-N     N-O     N-N     C-C      
+     /   \   /   \   /   \   /   \     
+  O-N     O-N     O-O     O-C     N-O  
+ /   \   /   \   /   \   /   \   /   \ 
+N     O-H     N-N     C-O     N-N     N
+ \   /   \   /   \   /   \   /   \   / 
+  C-N     O-O     O-N     N-C     O-C  
+ /   \   /   \   /   \   /   \   /   \ 
+N     N-O     N-O     C-N     O-N     O
+ \   /   \   /   \   /   \   /   \   / 
+  N-N     C-O     C-O     H-N     O-N  
+ /   \   /   \   /   \   /   \   /   \ 
+N     O-O     N-O     O-O     O-H     N
+ \   /   \   /   \   /   \   /   \   / 
+  O-H     O-N     N-O     N-N     N-C  
+ /   \   /   \   /   \   /   \   /   \ 
+O     O-O     C-N     O-C     N-C     C
+ \   /   \   /   \   /   \   /   \   / 
+  O-C     O-C     N-N     N-N     O-H  
+     \   /   \   /   \   /   \   /     
+      O-C     O-C     N-N     O-H      
+         \   /   \   /   \   /         
+          N-O     C-O     N-O          
+             \   /   \   /             
+              O-H     O-N              
+                 \   /                 
+                  O-N                  
+</canvas>
+</div>
+
+        <p />
+        <code class="banner">
+&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\<br />
+H&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;O-H&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H<br />
+&nbsp;\&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;/<br />
+&nbsp;&nbsp;H-N&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;O-O<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;/<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;N-N
+        </code>
+
+    </div>
+</body>
+</html>
+
+
+
+<script>
+
+function showControls() {
+    document.querySelectorAll(".controlBtn").forEach(function(btn) {
+        btn.style.visibilty = "visible";
+        btn.style.opacity   = "1";
+    });
+}
+
+function hideControls() {
+    document.querySelectorAll(".controlBtn").forEach(function(btn) {
+        btn.style.visibilty = "hidden";
+        btn.style.opacity   = "0";
+    });
 }
 
 function clear(r, g, b) {
@@ -62,76 +1519,173 @@ function ignore(event) {
     return false;
 }
 
-async function init() {
-    const { instance } = await WebAssembly.instantiateStreaming(
-        fetch("./molekularis.wasm"),
-        { env: { clear, draw_line, draw_char, draw_dot } }
-    );
 
-    puzzle_text = `              O-N              
-             /   \\             
-          O-N     N-N          
-         /   \\   /   \\         
-      N-C     C-C     C-N      
-     /   \\   /   \\   /   \\     
-  N-N     O-O     O-N     O-N  
- /   \\   /   \\   /   \\   /   \\ 
-O     N-N     C-O     O-O     N
- \\   /   \\   /   \\   /   \\   / 
-  O-O     O-C     N-O     O-O  
- /   \\   /   \\   /   \\   /   \\ 
-O     O-O     O-N     O-C     O
- \\   /   \\   /   \\   /   \\   / 
-  N-O     O-O     O-N     N-O  
- /   \\   /   \\   /   \\   /   \\ 
-O     N-N     N-O     N-O     N
- \\   /   \\   /   \\   /   \\   / 
-  O-O     O-C     N-N     O-N  
- /   \\   /   \\   /   \\   /   \\ 
-O     O-N     O-N     O-O     N
- \\   /   \\   /   \\   /   \\   / 
-  N-N     N-O     C-O     N-O  
-     \\   /   \\   /   \\   /     
-      C-C     N-N     N-O      
-         \\   /   \\   /         
-          O-O     N-N          
-             \\   /             
-              O-O              
-`;
-    
-    const array = new Uint8Array(
-      instance.exports.memory.buffer,
-      instance.exports.puzzle_text,
-      puzzle_text.length
-    );
-    const textEncoder = new TextEncoder();
-    array.set(textEncoder.encode(puzzle_text));
-    instance.exports.init(array.length);
+function close(event) {
+    document.body.style.overflow = 'visible';
+    hideControls();
+    var c = document.getElementById("fullscreen");
+    if(c) {
+        const array_to = new Uint8Array(c.target.instance.exports.memory.buffer);
+        const array_from = new Uint8Array(c.instance.exports.memory.buffer);
+        array_to.set(array_from);
+        update(c.target);
+        rect = c.target.getBoundingClientRect();
+        c.style.border = "1px solid black";
+        c.style.width = rect.width + "px";
+        c.style.height = rect.height + "px";
+        c.style.left = rect.left + "px";
+        c.style.top = rect.top + "px";
+        c.addEventListener("transitionend", function() { 
+            document.querySelectorAll("canvas").forEach(function(c2) {
+                c2.addEventListener("click", toFullscreen);
+            });
+            c.remove();
+        });
+    }
+}
 
-    update = instance.exports.update;
+function update(c, x = 0, y = 0, btn = -1) {
+    rect = c.getBoundingClientRect();
+    c.instance.exports.update(rect.width, rect.height, x, y, btn);
+}
 
-    if (canvas.getContext) {
-        ctx = canvas.getContext('2d');
-        resize();
-        canvas.addEventListener("click", click);
-        canvas.addEventListener("contextmenu", ignore);
-        canvas.addEventListener("auxclick", click);
-        window.addEventListener("resize", resize);
-        document.onkeydown = function(event) {
-            if(event.key == "y" || event.key == "z") {
-                instance.exports.undo();
-                update(width, height, 0, 0, -1);
-            }
-        };
+function click(event) {
+    event.preventDefault();
+    update(event.target, event.clientX, event.clientY, event.button);
+    return false;
+}
+
+function undo() {
+    var c = document.getElementById("fullscreen");
+    if(c) {
+        c.instance.exports.undo();
+        update(c);
+    }
+}
+
+function redo() {
+    var c = document.getElementById("fullscreen");
+    if(c) {
+        c.instance.exports.redo();
+        update(c);
+    }
+}
+
+function resize(c) {
+    rect = c.getBoundingClientRect();
+    c.width = rect.width;
+    c.height = rect.height;
+    if(c.instance) update(c);
+}
+
+const resizeObserver = new ResizeObserver(entries => {
+    for (let entry of entries) {
+        resize(entry.target);
+    }
+});
+
+function toFullscreen(event) {
+    if(!module) return;
+    var t = event.target;
+    var c = t.cloneNode(true);
+    c.target = t;
+    document.querySelector('body').appendChild(c);
+    rect = t.getBoundingClientRect();
+    c.style.left = rect.left + "px";
+    c.style.top = rect.top + "px";
+    c.id = "fullscreen";
+    var x = c.clientHeight;                
+    init(module, c, t);
+    c.style.zIndex = 1;
+    c.style.position = "fixed";
+    c.style.left = "0px";
+    c.style.top = "0px";
+    c.style.width = "100%";
+    c.style.height = "100%";
+    c.addEventListener("click", click);
+    c.addEventListener("contextmenu", ignore);
+    c.addEventListener("auxclick", click);
+    c.addEventListener("transitionend", function thistransition() { 
+        c.style.border = "0";
+        showControls();
+        c.removeEventListener("transitionend", thistransition);
+    });
+    document.querySelectorAll("canvas").forEach(function(c2) {
+        if(c != c2) c2.removeEventListener("click", toFullscreen);
+    });
+    resizeObserver.observe(c);
+    document.body.style.overflow = 'hidden';
+}
+
+document.onkeydown = function(event) {
+    if(event.key == "Escape") close();
+    if(event.key == "y" || event.key == "z") undo();
+};
+
+
+function init(mod, c, t = null) {
+    const ctx = c.getContext('2d');
+
+    function clear(r, g, b) {
+        ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")"
+        ctx.fillRect(0, 0, c.width, c.height);
     }
 
+    function draw_line(x0, y0, x1, y1, thickness) {
+        ctx.lineWidth = thickness;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();    
+    }
+
+
+    function draw_dot(x, y) {
+        ctx.beginPath();
+        ctx.arc(x, y, 0.8, 0, 2*Math.PI);
+        ctx.fill();    
+    }
+
+    function draw_char(x, y, c, s) {
+        ctx.font = 20*s + 'px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = 'rgb(0, 0, 0)';
+        ctx.fillText(String.fromCharCode(c), x, y - 7*s);
+    }
+
+    WebAssembly.instantiate(mod, { env: { clear, draw_line, draw_char, draw_dot } }).then(instance => {
+        var puzzle_text = c.innerHTML;
+        if(!t) {
+            const array = new Uint8Array(
+                instance.exports.memory.buffer,
+                instance.exports.puzzle_text,
+                puzzle_text.length
+            );
+            const textEncoder = new TextEncoder();
+            array.set(textEncoder.encode(puzzle_text));
+            instance.exports.init(array.length);
+        } else {
+            const array_to = new Uint8Array(instance.exports.memory.buffer);
+            const array_from = new Uint8Array(t.instance.exports.memory.buffer);
+            array_to.set(array_from);
+        }
+        c.instance = instance;
+        resize(c);
+    });
 }
-init();
+
+var module;
+WebAssembly.compileStreaming(fetch("./molekularis.wasm")).then(mod => {
+    module = mod;
+    for(const c of document.querySelectorAll("canvas")) {
+        c.addEventListener("click", toFullscreen);
+        init(mod, c);
+    }
+});
+
+document.getElementById("closeBtn").addEventListener("click", close);
+document.getElementById("undoBtn").addEventListener("click", undo);
+document.getElementById("redoBtn").addEventListener("click", redo);
 </script>
-
-
-
-
-
-
 </body>

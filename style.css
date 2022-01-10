@@ -1,5 +1,6 @@
 :root{
-    --accent: #6f0070;
+    --accent:  #6f0070;
+    --accent2: #348812;
     --main: #333;
     --light: #666;
     --lighter: #f3f3f3;
@@ -35,6 +36,11 @@ img{
 em.keyword{
     color: var(--accent);
     font-style: normal;
+}
+
+em.comment{
+    color: var(--accent2);
+    font-style: italics;
 }
 
 /*Menu bar*/
@@ -108,18 +114,10 @@ code.descpreview{
 img.descpreview{
     width: 300px; 
     padding: 10px;
-    //transition: all 0.2s ease;
 }
 
-//img.descpreview:hover{
-//    width: 320px;
-//    padding: 20px;
-//    transition: all 0.2s ease;
-//}
-
-
 @media screen and (max-width: 100%){
-    .main{width: 1200px}
+    .main{width: 1200px;}
 }
 
 @media screen and (max-width: 800px){
