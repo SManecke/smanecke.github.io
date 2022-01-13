@@ -1,3 +1,42 @@
+const VALUE_KIND_PUZZLE_TEXT = 0;
+const VALUE_KIND_PUZZLE_TEXT_LENGTH = 1;
+const VALUE_KIND_REWIND_STACK = 2;
+const VALUE_KIND_REWIND_STACK_SIZE = 3;
+const VALUE_KIND_REWIND_STACK_SIZE_MAX = 4;
+const VALUE_KIND_BOND_SOLUTIONS = 5;
+const VALUE_KIND_BONDS_COUNT = 6;
+
+const encoder = new TextEncoder();
+const decoder = new TextDecoder('utf8');
+
+function save(c) {
+    if(!c.instance) return;
+    const key = c.innerHTML;
+    const bonds_count = c.instance.exports.get_value(VALUE_KIND_BONDS_COUNT);
+    const bond_solutions = new Uint8Array(
+        c.instance.exports.memory.buffer,
+        c.instance.exports.get_value(VALUE_KIND_BOND_SOLUTIONS),
+        bonds_count
+    );
+
+    const rewind_stack_size     = c.instance.exports.get_value(VALUE_KIND_REWIND_STACK_SIZE);
+    const rewind_stack_size_max = c.instance.exports.get_value(VALUE_KIND_REWIND_STACK_SIZE_MAX);
+    const rewind_stack = new Uint8Array(
+        c.instance.exports.memory.buffer,
+        c.instance.exports.get_value(VALUE_KIND_REWIND_STACK),
+        rewind_stack_size_max * 4
+    );
+    const value = {
+        "bonds_count": bonds_count,
+        "bond_solutions": bond_solutions,
+        "rewind_stack_size": rewind_stack_size,
+        "rewind_stack_size_max": rewind_stack_size_max,
+        "rewind_stack": rewind_stack
+    }
+    localStorage.setItem(key, JSON.stringify(value));
+}
+
+
 function showControls() {
     document.querySelectorAll(".controlBtn").forEach(function(btn) {
         btn.style.visibilty = "visible";
@@ -74,6 +113,7 @@ function close(event) {
 function update(c, x = 0, y = 0, btn = -1) {
     rect = c.getBoundingClientRect();
     c.instance.exports.update(rect.width, rect.height, x, y, btn);
+    save(c);
 }
 
 function click(event) {
@@ -121,8 +161,8 @@ function toFullscreen(event) {
     c.style.left = rect.left + "px";
     c.style.top = rect.top + "px";
     c.id = "fullscreen";
-    var x = c.clientHeight;                
-    init(module, c, t);
+    var x = c.clientHeight;
+    init(module, c);
     c.style.zIndex = 1;
     c.style.position = "fixed";
     c.style.left = "0px";
@@ -150,7 +190,7 @@ document.onkeydown = function(event) {
 };
 
 
-function init(mod, c, t = null) {
+function init(mod, c) {
     const ctx = c.getContext('2d');
 
     function clear(r, g, b) {
@@ -181,29 +221,46 @@ function init(mod, c, t = null) {
         ctx.fillText(String.fromCharCode(c), x, y - 7*s);
     }
 
-    WebAssembly.instantiate(mod, { env: { clear, draw_line, draw_char, draw_dot } }).then(instance => {
-        var puzzle_text = c.innerHTML;
-        if(!t) {
-            const array = new Uint8Array(
-                instance.exports.memory.buffer,
-                instance.exports.puzzle_text,
-                puzzle_text.length
-            );
-            const textEncoder = new TextEncoder();
-            array.set(textEncoder.encode(puzzle_text));
-            instance.exports.init(array.length);
-        } else {
-            const array_to = new Uint8Array(instance.exports.memory.buffer);
-            const array_from = new Uint8Array(t.instance.exports.memory.buffer);
-            array_to.set(array_from);
-        }
+    function debug_break() { debugger; }
+    WebAssembly.instantiate(mod, { env: { clear, draw_line, draw_char, draw_dot, debug_break } }).then(instance => {
+        const puzzle_text = c.innerHTML;
+        const puzzle_text_array = new Uint8Array(
+            instance.exports.memory.buffer,
+            instance.exports.get_value(VALUE_KIND_PUZZLE_TEXT),
+            puzzle_text.length
+        );
+        puzzle_text_array.set(encoder.encode(puzzle_text));
+        instance.exports.set_value(VALUE_KIND_PUZZLE_TEXT_LENGTH, puzzle_text_array.length);
+        instance.exports.init();
         c.instance = instance;
+        const save_data = localStorage.getItem(puzzle_text);
+        if(save_data) {
+            const save_object = JSON.parse(save_data);
+            if(instance.exports.get_value(VALUE_KIND_BONDS_COUNT) != save_object.bonds_count) {
+                debugger;
+            }
+            instance.exports.set_value(VALUE_KIND_REWIND_STACK_SIZE, save_object.rewind_stack_size);
+            instance.exports.set_value(VALUE_KIND_REWIND_STACK_SIZE_MAX, save_object.rewind_stack_size_max);
+            const rewind_stack = new Uint8Array(
+                instance.exports.memory.buffer,
+                instance.exports.get_value(VALUE_KIND_REWIND_STACK),
+                save_object.rewind_stack_size_max * 4
+            );
+            rewind_stack.set(Object.values(save_object.rewind_stack));
+            const bond_solutions = new Uint8Array(
+                instance.exports.memory.buffer,
+                instance.exports.get_value(VALUE_KIND_BOND_SOLUTIONS),
+                save_object.bonds_count
+            );
+            bond_solutions.set(Object.values(save_object.bond_solutions));
+        }
+        
         resize(c);
     });
 }
 
 var module;
-WebAssembly.compileStreaming(fetch("./molekularis.wasm")).then(mod => {
+WebAssembly.compileStreaming(fetch("molekularis.wasm")).then(mod => {
     module = mod;
     for(const c of document.querySelectorAll("canvas")) {
         c.addEventListener("click", toFullscreen);
