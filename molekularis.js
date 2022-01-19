@@ -122,6 +122,35 @@ function click(event) {
     return false;
 }
 
+function touchstart(event) {
+    c = event.target;
+    event.preventDefault();
+    if(!c.timer) {
+        update(c, event.touches[0].clientX, event.touches[0].clientY, 0);
+        c.timer = setTimeout(() => { 
+            c.timer = null; 
+            update(c, event.touches[0].clientX, event.touches[0].clientY, 2); 
+            update(c, event.touches[0].clientX, event.touches[0].clientY, 1);
+        }, 400);
+    }
+}
+
+function touchend(event) {
+    c = event.target;
+    if(c.timer) {
+        clearTimeout(c.timer);
+        c.timer = null;
+    }
+}
+
+function touchcancel(event) {
+    c = event.target;
+    if(c.timer) {
+        clearTimeout(c.timer);
+        c.timer = null;
+    }
+}
+
 function undo() {
     var c = document.getElementById("fullscreen");
     if(c) {
@@ -169,9 +198,13 @@ function toFullscreen(event) {
     c.style.top = "0px";
     c.style.width = "100%";
     c.style.height = "100%";
+
     c.addEventListener("click", click);
     c.addEventListener("contextmenu", ignore);
     c.addEventListener("auxclick", click);
+    c.addEventListener("touchstart", touchstart, false);
+    c.addEventListener("touchend", touchend, false);
+    c.addEventListener("touchcancel", touchcancel, false);
     c.addEventListener("transitionend", function thistransition() { 
         c.style.border = "0";
         showControls();
