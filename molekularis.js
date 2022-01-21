@@ -110,9 +110,9 @@ function close(event) {
     }
 }
 
-function update(c, x = 0, y = 0, btn = -1) {
+function update(c, x = 0, y = 0, btn = -1, z = 0) {
     rect = c.getBoundingClientRect();
-    c.instance.exports.update(rect.width, rect.height, x, y, btn);
+    c.instance.exports.update(rect.width, rect.height, x, y, btn, z);
     save(c);
 }
 
@@ -149,6 +149,18 @@ function touchcancel(event) {
         clearTimeout(c.timer);
         c.timer = null;
     }
+}
+
+function wheel(event) {
+    c = event.target;
+    const rect = document.querySelector("body").getBoundingClientRect();
+    if(event.ctrlKey) {
+        event.preventDefault();
+        update(c, event.clientX, event.clientY, 3, event.wheelDeltaY);
+    } else {
+        update(c, event.wheelDeltaX, event.wheelDeltaY, 4);
+    }
+    resize(c);
 }
 
 function undo() {
@@ -199,6 +211,7 @@ function toFullscreen(event) {
     c.style.width = "100%";
     c.style.height = "100%";
 
+    c.addEventListener('wheel', wheel);
     c.addEventListener("click", click);
     c.addEventListener("contextmenu", ignore);
     c.addEventListener("auxclick", click);
