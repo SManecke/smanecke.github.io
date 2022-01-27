@@ -36,6 +36,40 @@ function save(c) {
     localStorage.setItem(key, JSON.stringify(value));
 }
 
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+function download_savefile(event) {
+    var value = { };
+    for(let i = 0; i < window.localStorage.length; i++) {
+        const key = window.localStorage.key(i);
+        value[key] = window.localStorage.getItem(key);
+    }
+    download("molekularis.save", JSON.stringify(value));
+}
+
+function upload_savefile(event) {
+    document.getElementById("upload").files[0].text().then(text => {
+        const value = JSON.parse(text);
+        for(const key in value) {
+            window.localStorage.setItem(key, value[key]);
+        }
+        for(const c of document.querySelectorAll("canvas")) {
+            init(module, c);
+        }
+    });
+}
+
 
 function showControls() {
     document.querySelectorAll(".controlBtn").forEach(function(btn) {
@@ -317,3 +351,5 @@ WebAssembly.compileStreaming(fetch("molekularis.wasm")).then(mod => {
 document.getElementById("closeBtn").addEventListener("click", close);
 document.getElementById("undoBtn").addEventListener("click", undo);
 document.getElementById("redoBtn").addEventListener("click", redo);
+document.getElementById("downloadBtn").addEventListener("click", download_savefile);
+document.getElementById("upload").addEventListener("change", upload_savefile);
