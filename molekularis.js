@@ -85,35 +85,6 @@ function hideControls() {
     });
 }
 
-function clear(r, g, b) {
-    ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")"
-    ctx.fillRect(0, 0, width, height);
-}
-
-function draw_line(x0, y0, x1, y1, thickness) {
-    ctx.lineWidth = thickness;
-    ctx.beginPath();
-    ctx.moveTo(x0, y0);
-    ctx.lineTo(x1, y1);
-    ctx.stroke();    
-}
-
-
-function draw_dot(x, y) {
-    ctx.beginPath();
-    ctx.arc(x, y, 0.8, 0, 2*Math.PI);
-    ctx.fill();    
-}
-
-
-function draw_char(x, y, c) {
-    ctx.font = '18px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    ctx.fillStyle = 'rgb(0, 0, 0)';
-    ctx.fillText(String.fromCharCode(c), x, y - 7);
-}
-
 function ignore(event) {
     event.preventDefault();
     return false;
@@ -215,8 +186,9 @@ function redo() {
 
 function resize(c) {
     rect = c.getBoundingClientRect();
-    c.width = rect.width;
-    c.height = rect.height;
+    const dpr = window.devicePixelRatio;
+    c.width = rect.width*dpr;
+    c.height = rect.height*dpr;
     if(c.instance) update(c);
 }
 
@@ -246,9 +218,8 @@ function toFullscreen(event) {
     c.style.height = "100%";
 
     c.addEventListener('wheel', wheel);
-    c.addEventListener("click", click);
+    c.addEventListener("mousedown", click);
     c.addEventListener("contextmenu", ignore);
-    c.addEventListener("auxclick", click);
     c.addEventListener("touchstart", touchstart, false);
     c.addEventListener("touchend", touchend, false);
     c.addEventListener("touchcancel", touchcancel, false);
@@ -274,31 +245,34 @@ function init(mod, c) {
     const ctx = c.getContext('2d');
 
     function clear(r, g, b) {
-        ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")"
-        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.canvas.style.backgroundColor = "rgb(" + r + ", " + g + ", " + b + ")"
+        ctx.clearRect(0, 0, c.width, c.height);
     }
 
     function draw_line(x0, y0, x1, y1, thickness) {
-        ctx.lineWidth = thickness;
+        const dpr = window.devicePixelRatio;
+        ctx.lineWidth = thickness*dpr;
         ctx.beginPath();
-        ctx.moveTo(x0, y0);
-        ctx.lineTo(x1, y1);
-        ctx.stroke();    
+        ctx.moveTo(x0*dpr, y0*dpr);
+        ctx.lineTo(x1*dpr, y1*dpr);
+        ctx.stroke();
     }
 
 
     function draw_dot(x, y) {
+        const dpr = window.devicePixelRatio;
         ctx.beginPath();
-        ctx.arc(x, y, 0.8, 0, 2*Math.PI);
-        ctx.fill();    
+        ctx.arc(x*dpr, y*dpr, 0.8*dpr, 0, 2*Math.PI);
+        ctx.fill();
     }
 
     function draw_char(x, y, c, s) {
-        ctx.font = 20*s + 'px serif';
+        const dpr = window.devicePixelRatio;
+        ctx.font = 20*s*dpr + 'px serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
         ctx.fillStyle = 'rgb(0, 0, 0)';
-        ctx.fillText(String.fromCharCode(c), x, y - 7*s);
+        ctx.fillText(String.fromCharCode(c), x*dpr, y*dpr - 7*s*dpr);
     }
 
     function debug_break() { debugger; }
@@ -334,8 +308,20 @@ function init(mod, c) {
             );
             bond_solutions.set(Object.values(save_object.bond_solutions));
         }
-        
-        resize(c);
+
+        let remove = null;
+        const updatePixelRatio = () => {
+            remove?.();
+            const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+            const media = matchMedia(mqString);
+            media.addEventListener("change", updatePixelRatio);
+            remove = () => {
+                media.removeEventListener("change", updatePixelRatio);
+            };
+
+            resize(c);
+        };
+        updatePixelRatio();
     });
 }
 
